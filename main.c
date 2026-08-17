@@ -5,24 +5,13 @@
  */
 
 #include "vault.h"
+#include "auth.h"
 #include "crypto.h"
 #include "display.h"
 #include "fileio.h"
 #include "vault_ops.h"
 #include "search.h"
 #include <time.h>
-
-int verify_password(const char *input, struct VaultMeta *meta) {
-    if (!input || !meta) {
-        return 0;
-    }
-    char computed_hash[MAX_HASH_LEN];
-    hash_password(input, computed_hash);
-    if (strcmp(computed_hash, meta->password_hash) == 0) {
-        return 1;
-    }
-    return 0;
-}
 
 void export_report(struct Record *recs, int n) {
     FILE *fp = fopen(EXPORT_FILE, "w");
@@ -123,6 +112,7 @@ void main_menu_loop(struct VaultMeta *meta) {
         } else if (strcmp(cmd, "passwd") == 0) {
             cmd_change_password(meta);
         } else if (strcmp(cmd, "stats") == 0) {
+            load_meta(meta);
             struct Record buf[MAX_RECORDS];
             int count = load_all_records(buf, MAX_RECORDS);
             print_stats(buf, count, meta);
@@ -180,13 +170,13 @@ int main(void) {
     printf("Access granted. Welcome back.\n");
     printf("Last login: %s\n\n", meta.last_login);
 
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
-    if (t) {
-        strftime(meta.last_login, sizeof(meta.last_login), "%Y-%m-%d %H:%M", t);
+    time_t t = time(NULL);
+    struct tm *tm_info = localtime(&t);
+    if (tm_info) {
+        strftime(meta.last_login, MAX_DATE_LEN, "%d-%b-%Y", tm_info);
     } else {
-        strncpy(meta.last_login, "2026-08-17", sizeof(meta.last_login) - 1);
-        meta.last_login[sizeof(meta.last_login) - 1] = '\0';
+        strncpy(meta.last_login, "Aug-2026", MAX_DATE_LEN - 1);
+        meta.last_login[MAX_DATE_LEN - 1] = '\0';
     }
     save_meta(&meta);
 

@@ -38,11 +38,21 @@ void print_table(struct Record *records, int count) {
             } else if (records[i].type == TYPE_CONTACT) {
                 type_str = "Contact";
             }
+
+            char preview[21];
+            strncpy(preview, records[i].field1, 20);
+            preview[20] = '\0';
+            for (int p = 0; preview[p] != '\0'; p++) {
+                if (!isprint((unsigned char)preview[p])) {
+                    preview[p] = '?';
+                }
+            }
+
             printf("%-4d | %-10s | %-32s| %.20s\n",
                    records[i].id,
                    type_str,
                    records[i].title,
-                   records[i].field1);
+                   preview);
         }
     }
 

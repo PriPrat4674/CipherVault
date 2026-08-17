@@ -1,0 +1,14 @@
+=== CIPHERVAULT EXPORT ===
+
+[1] Janine
+    Field1: JanineaTeagues
+    Field2: dkdkdkdkdk
+    Field3: janine@gmailucom
+    Added : 17-Aug-2026
+
+[2] janine password
+    Field1: janine
+    Field2: ppllkk
+    Field3: 
+    Added : 17-Aug-2026
+

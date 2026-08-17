@@ -76,9 +76,11 @@ void print_table(struct Record *records, int count);
 void print_stats(struct Record *records, int count, struct VaultMeta *meta);
 void cmd_about(void);
 
+/* --- Functions implemented in auth.c --- */
+int  verify_password(const char *input, struct VaultMeta *meta);
+
 /* --- Functions implemented in main.c --- */
 void main_menu_loop(struct VaultMeta *meta);
-int  verify_password(const char *input, struct VaultMeta *meta);
 void export_report(struct Record *recs, int n);
 
 #endif /* VAULT_H */

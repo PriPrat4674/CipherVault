@@ -40,6 +40,13 @@ int load_all_records(struct Record *buf, int max) {
         return 0;
     }
 
+    fseek(fp, 0, SEEK_END);
+    long file_size = ftell(fp);
+    if (file_size > 0 && (file_size % (long)sizeof(struct Record)) != 0) {
+        printf("Warning: vault file may be corrupted.\n");
+    }
+    fseek(fp, 0, SEEK_SET);
+
     int count = 0;
     while (count < max && fread(&buf[count], sizeof(struct Record), 1, fp) == 1) {
         count++;

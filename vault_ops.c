@@ -6,7 +6,10 @@
 
 #include "vault.h"
 #include "vault_ops.h"
+<<<<<<< HEAD
 #include "auth.h"
+=======
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 #include "crypto.h"
 #include "fileio.h"
 #include "display.h"
@@ -14,7 +17,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <time.h>
+=======
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
 /* ---------------------------------------------------------------
  * cmd_add_record
@@ -24,7 +30,11 @@
 void cmd_add_record(int enc_key)
 {
     struct Record r = {0};
+<<<<<<< HEAD
     int type_choice = 0;
+=======
+    int type_choice;
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
     printf("Select record type:\n");
     printf("1. Password\n");
@@ -51,6 +61,7 @@ void cmd_add_record(int enc_key)
     fgets(r.title, MAX_TITLE_LEN, stdin);
     r.title[strcspn(r.title, "\n")] = '\0';
 
+<<<<<<< HEAD
     /* Format current creation date */
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
@@ -60,6 +71,11 @@ void cmd_add_record(int enc_key)
         strncpy(r.created_date, "Aug-2026", MAX_DATE_LEN - 1);
         r.created_date[MAX_DATE_LEN - 1] = '\0';
     }
+=======
+    /* Hardcoded creation date — no time.h dependency */
+    strncpy(r.created_date, "Aug-2026", MAX_DATE_LEN - 1);
+    r.created_date[MAX_DATE_LEN - 1] = '\0';
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
     r.is_deleted = 0;
 
@@ -266,11 +282,18 @@ void cmd_delete_record(int id)
 void cmd_purge(int enc_key)
 {
     printf("WARNING: This will permanently remove all deleted records. Continue? (y/n): ");
+<<<<<<< HEAD
     char confirm = 'n';
     scanf(" %c", &confirm);
     while (getchar() != '\n');
 
     if (confirm != 'y' && confirm != 'Y') {
+=======
+    char confirm = (char)getchar();
+    while (getchar() != '\n');
+
+    if (confirm != 'y') {
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
         printf("Purge cancelled.\n");
         return;
     }
@@ -320,13 +343,22 @@ void cmd_purge(int enc_key)
 void cmd_change_password(struct VaultMeta *meta)
 {
     char current_input[MAX_FIELD_LEN];
+<<<<<<< HEAD
+=======
+    char computed[MAX_HASH_LEN];
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
     /* Verify current password */
     printf("Enter current password: ");
     fgets(current_input, MAX_FIELD_LEN, stdin);
     current_input[strcspn(current_input, "\n")] = '\0';
 
+<<<<<<< HEAD
     if (!verify_password(current_input, meta)) {
+=======
+    hash_password(current_input, computed);
+    if (strcmp(computed, meta->password_hash) != 0) {
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
         printf("Incorrect current password.\n");
         return;
     }

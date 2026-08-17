@@ -12,12 +12,19 @@
 
 #include <stdio.h>
 #include <string.h>
+<<<<<<< HEAD
 #include <ctype.h>
+=======
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
 /* ---------------------------------------------------------------
  * contains — static helper
  * Manual substring search; returns 1 if needle found in haystack,
+<<<<<<< HEAD
  * 0 otherwise. Does not use strstr(). Case-insensitive.
+=======
+ * 0 otherwise. Does not use strstr().
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
  * --------------------------------------------------------------- */
 static int contains(const char *haystack, const char *needle)
 {
@@ -33,7 +40,11 @@ static int contains(const char *haystack, const char *needle)
     for (int i = 0; i <= h_len - n_len; i++) {
         int match = 1;
         for (int j = 0; j < n_len; j++) {
+<<<<<<< HEAD
             if (tolower((unsigned char)haystack[i + j]) != tolower((unsigned char)needle[j])) {
+=======
+            if (haystack[i + j] != needle[j]) {
+>>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
                 match = 0;
                 break;
             }

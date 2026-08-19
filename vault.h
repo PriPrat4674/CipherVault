@@ -78,6 +78,7 @@ void cmd_about(void);
 
 /* --- Functions implemented in auth.c --- */
 int  verify_password(const char *input, struct VaultMeta *meta);
+void get_masked_input(char *buf, int max_len);
 
 /* --- Functions implemented in main.c --- */
 void main_menu_loop(struct VaultMeta *meta);

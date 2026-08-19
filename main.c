@@ -141,18 +141,14 @@ int main(void) {
 
     if (load_meta(&meta) == 0) {
         printf("First run detected. Set your master password: ");
-        if (fgets(pwd_input, sizeof(pwd_input), stdin)) {
-            pwd_input[strcspn(pwd_input, "\r\n")] = '\0';
-        }
+        get_masked_input(pwd_input, sizeof(pwd_input));
         init_vault(pwd_input);
         load_meta(&meta);
     }
 
     do {
         printf("Enter master password: ");
-        if (fgets(pwd_input, sizeof(pwd_input), stdin)) {
-            pwd_input[strcspn(pwd_input, "\r\n")] = '\0';
-        }
+        get_masked_input(pwd_input, sizeof(pwd_input));
 
         if (verify_password(pwd_input, &meta)) {
             break;

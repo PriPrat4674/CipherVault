@@ -7,11 +7,11 @@
 #include "display.h"
 
 void print_banner(void) {
-    printf("╔══════════════════════════════════════════════════╗\n");
-    printf("║           CIPHERVAULT                            ║\n");
-    printf("║     Secure Personal Data Manager in C            ║\n");
-    printf("║     Type 'help' to see the menu after login      ║\n");
-    printf("╚══════════════════════════════════════════════════╝\n");
+    printf("+==================================================+\n");
+    printf("|                   CIPHERVAULT                    |\n");
+    printf("|        Secure Personal Data Manager in C         |\n");
+    printf("|     Type 'help' to see the menu after login      |\n");
+    printf("+==================================================+\n");
     printf("\n");
 }
 

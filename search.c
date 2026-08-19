@@ -12,19 +12,12 @@
 
 #include <stdio.h>
 #include <string.h>
-<<<<<<< HEAD
 #include <ctype.h>
-=======
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
 /* ---------------------------------------------------------------
  * contains — static helper
  * Manual substring search; returns 1 if needle found in haystack,
-<<<<<<< HEAD
  * 0 otherwise. Does not use strstr(). Case-insensitive.
-=======
- * 0 otherwise. Does not use strstr().
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
  * --------------------------------------------------------------- */
 static int contains(const char *haystack, const char *needle)
 {
@@ -40,11 +33,7 @@ static int contains(const char *haystack, const char *needle)
     for (int i = 0; i <= h_len - n_len; i++) {
         int match = 1;
         for (int j = 0; j < n_len; j++) {
-<<<<<<< HEAD
             if (tolower((unsigned char)haystack[i + j]) != tolower((unsigned char)needle[j])) {
-=======
-            if (haystack[i + j] != needle[j]) {
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
                 match = 0;
                 break;
             }
@@ -72,14 +61,16 @@ static void swap_records(struct Record *a, struct Record *b)
  * --------------------------------------------------------------- */
 void cmd_search(int enc_key)
 {
-    int mode;
+    int mode = 0;
 
     printf("Search by:\n");
     printf("1. Title keyword\n");
     printf("2. Record type (Password / Note / Contact)\n");
     printf("3. Keyword in any field\n");
     printf("Choice: ");
-    scanf("%d", &mode);
+    if (scanf("%d", &mode) != 1) {
+        mode = 0;
+    }
     while (getchar() != '\n');
 
     struct Record buf[MAX_RECORDS];
@@ -102,7 +93,7 @@ void cmd_search(int enc_key)
         char keyword[MAX_FIELD_LEN];
         printf("Enter keyword: ");
         fgets(keyword, MAX_FIELD_LEN, stdin);
-        keyword[strcspn(keyword, "\n")] = '\0';
+        keyword[strcspn(keyword, "\r\n")] = '\0';
 
         for (int i = 0; i < count; i++) {
             if (dec[i].is_deleted == 0 && contains(dec[i].title, keyword)) {
@@ -112,9 +103,11 @@ void cmd_search(int enc_key)
 
     } else if (mode == 2) {
         /* ---- Mode 2: record type ---- */
-        int type_choice;
+        int type_choice = 0;
         printf("Type (1=Password, 2=Note, 3=Contact): ");
-        scanf("%d", &type_choice);
+        if (scanf("%d", &type_choice) != 1) {
+            type_choice = 0;
+        }
         while (getchar() != '\n');
 
         for (int i = 0; i < count; i++) {
@@ -128,7 +121,7 @@ void cmd_search(int enc_key)
         char kw[MAX_FIELD_LEN];
         printf("Enter keyword: ");
         fgets(kw, MAX_FIELD_LEN, stdin);
-        kw[strcspn(kw, "\n")] = '\0';
+        kw[strcspn(kw, "\r\n")] = '\0';
 
         for (int i = 0; i < count; i++) {
             if (dec[i].is_deleted == 0 &&
@@ -160,7 +153,7 @@ void cmd_search(int enc_key)
  * --------------------------------------------------------------- */
 void cmd_sort(int enc_key)
 {
-    int mode;
+    int mode = 0;
 
     printf("Sort by:\n");
     printf("1. ID (default order)\n");
@@ -168,7 +161,9 @@ void cmd_sort(int enc_key)
     printf("3. Type\n");
     printf("4. Date Added\n");
     printf("Choice: ");
-    scanf("%d", &mode);
+    if (scanf("%d", &mode) != 1) {
+        mode = 0;
+    }
     while (getchar() != '\n');
 
     struct Record buf[MAX_RECORDS];

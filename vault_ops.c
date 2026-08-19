@@ -6,10 +6,7 @@
 
 #include "vault.h"
 #include "vault_ops.h"
-<<<<<<< HEAD
 #include "auth.h"
-=======
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 #include "crypto.h"
 #include "fileio.h"
 #include "display.h"
@@ -17,10 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-<<<<<<< HEAD
 #include <time.h>
-=======
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
 /* ---------------------------------------------------------------
  * cmd_add_record
@@ -30,18 +24,16 @@
 void cmd_add_record(int enc_key)
 {
     struct Record r = {0};
-<<<<<<< HEAD
     int type_choice = 0;
-=======
-    int type_choice;
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
     printf("Select record type:\n");
     printf("1. Password\n");
     printf("2. Secure Note\n");
     printf("3. Contact\n");
     printf("Choice: ");
-    scanf("%d", &type_choice);
+    if (scanf("%d", &type_choice) != 1) {
+        type_choice = 0;
+    }
     while (getchar() != '\n');
 
     if (type_choice != 1 && type_choice != 2 && type_choice != 3) {
@@ -59,9 +51,8 @@ void cmd_add_record(int enc_key)
     /* Common field: title */
     printf("Title: ");
     fgets(r.title, MAX_TITLE_LEN, stdin);
-    r.title[strcspn(r.title, "\n")] = '\0';
+    r.title[strcspn(r.title, "\r\n")] = '\0';
 
-<<<<<<< HEAD
     /* Format current creation date */
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
@@ -71,11 +62,6 @@ void cmd_add_record(int enc_key)
         strncpy(r.created_date, "Aug-2026", MAX_DATE_LEN - 1);
         r.created_date[MAX_DATE_LEN - 1] = '\0';
     }
-=======
-    /* Hardcoded creation date — no time.h dependency */
-    strncpy(r.created_date, "Aug-2026", MAX_DATE_LEN - 1);
-    r.created_date[MAX_DATE_LEN - 1] = '\0';
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
     r.is_deleted = 0;
 
@@ -83,41 +69,40 @@ void cmd_add_record(int enc_key)
     if (r.type == TYPE_PASSWORD) {
         printf("Username: ");
         fgets(r.field1, MAX_FIELD_LEN, stdin);
-        r.field1[strcspn(r.field1, "\n")] = '\0';
+        r.field1[strcspn(r.field1, "\r\n")] = '\0';
 
         printf("Password: ");
-        fgets(r.field2, MAX_FIELD_LEN, stdin);
-        r.field2[strcspn(r.field2, "\n")] = '\0';
+        get_masked_input(r.field2, MAX_FIELD_LEN);
 
         printf("URL (optional): ");
         fgets(r.field3, 64, stdin);
-        r.field3[strcspn(r.field3, "\n")] = '\0';
+        r.field3[strcspn(r.field3, "\r\n")] = '\0';
 
     } else if (r.type == TYPE_NOTE) {
         printf("Note body: ");
         fgets(r.field1, MAX_FIELD_LEN, stdin);
-        r.field1[strcspn(r.field1, "\n")] = '\0';
+        r.field1[strcspn(r.field1, "\r\n")] = '\0';
 
         printf("Tags: ");
         fgets(r.field2, MAX_FIELD_LEN, stdin);
-        r.field2[strcspn(r.field2, "\n")] = '\0';
+        r.field2[strcspn(r.field2, "\r\n")] = '\0';
 
         printf("Category: ");
         fgets(r.field3, 64, stdin);
-        r.field3[strcspn(r.field3, "\n")] = '\0';
+        r.field3[strcspn(r.field3, "\r\n")] = '\0';
 
     } else { /* TYPE_CONTACT */
         printf("Full Name: ");
         fgets(r.field1, MAX_FIELD_LEN, stdin);
-        r.field1[strcspn(r.field1, "\n")] = '\0';
+        r.field1[strcspn(r.field1, "\r\n")] = '\0';
 
         printf("Phone: ");
         fgets(r.field2, MAX_FIELD_LEN, stdin);
-        r.field2[strcspn(r.field2, "\n")] = '\0';
+        r.field2[strcspn(r.field2, "\r\n")] = '\0';
 
         printf("Email: ");
         fgets(r.field3, 64, stdin);
-        r.field3[strcspn(r.field3, "\n")] = '\0';
+        r.field3[strcspn(r.field3, "\r\n")] = '\0';
     }
 
     /* Encrypt a copy and persist it; keep r unmodified for display */
@@ -200,7 +185,7 @@ void cmd_update_record(int id, int enc_key)
     /* Title */
     printf("Title: ");
     fgets(temp_input, MAX_FIELD_LEN, stdin);
-    temp_input[strcspn(temp_input, "\n")] = '\0';
+    temp_input[strcspn(temp_input, "\r\n")] = '\0';
     if (strlen(temp_input) > 0) {
         strncpy(buf[idx].title, temp_input, MAX_TITLE_LEN - 1);
         buf[idx].title[MAX_TITLE_LEN - 1] = '\0';
@@ -209,7 +194,7 @@ void cmd_update_record(int id, int enc_key)
     /* Field1 */
     printf("Field1: ");
     fgets(temp_input, MAX_FIELD_LEN, stdin);
-    temp_input[strcspn(temp_input, "\n")] = '\0';
+    temp_input[strcspn(temp_input, "\r\n")] = '\0';
     if (strlen(temp_input) > 0) {
         strncpy(buf[idx].field1, temp_input, MAX_FIELD_LEN - 1);
         buf[idx].field1[MAX_FIELD_LEN - 1] = '\0';
@@ -217,8 +202,12 @@ void cmd_update_record(int id, int enc_key)
 
     /* Field2 */
     printf("Field2: ");
-    fgets(temp_input, MAX_FIELD_LEN, stdin);
-    temp_input[strcspn(temp_input, "\n")] = '\0';
+    if (buf[idx].type == TYPE_PASSWORD) {
+        get_masked_input(temp_input, MAX_FIELD_LEN);
+    } else {
+        fgets(temp_input, MAX_FIELD_LEN, stdin);
+        temp_input[strcspn(temp_input, "\r\n")] = '\0';
+    }
     if (strlen(temp_input) > 0) {
         strncpy(buf[idx].field2, temp_input, MAX_FIELD_LEN - 1);
         buf[idx].field2[MAX_FIELD_LEN - 1] = '\0';
@@ -227,7 +216,7 @@ void cmd_update_record(int id, int enc_key)
     /* Field3 */
     printf("Field3: ");
     fgets(temp_input, MAX_FIELD_LEN, stdin);
-    temp_input[strcspn(temp_input, "\n")] = '\0';
+    temp_input[strcspn(temp_input, "\r\n")] = '\0';
     if (strlen(temp_input) > 0) {
         strncpy(buf[idx].field3, temp_input, 63);
         buf[idx].field3[63] = '\0';
@@ -282,18 +271,13 @@ void cmd_delete_record(int id)
 void cmd_purge(int enc_key)
 {
     printf("WARNING: This will permanently remove all deleted records. Continue? (y/n): ");
-<<<<<<< HEAD
     char confirm = 'n';
-    scanf(" %c", &confirm);
+    if (scanf(" %c", &confirm) != 1) {
+        confirm = 'n';
+    }
     while (getchar() != '\n');
 
     if (confirm != 'y' && confirm != 'Y') {
-=======
-    char confirm = (char)getchar();
-    while (getchar() != '\n');
-
-    if (confirm != 'y') {
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
         printf("Purge cancelled.\n");
         return;
     }
@@ -301,15 +285,15 @@ void cmd_purge(int enc_key)
     struct Record buf[MAX_RECORDS];
     struct Record clean[MAX_RECORDS];
 
-    int count      = load_all_records(buf, MAX_RECORDS);
+    int count       = load_all_records(buf, MAX_RECORDS);
     int clean_count = 0;
-    int removed    = count;   /* will subtract active records below */
+    int removed     = count;   /* will subtract active records below */
 
     /* Build compacted array with sequential IDs */
     for (int i = 0; i < count; i++) {
         if (buf[i].is_deleted == 0) {
-            clean[clean_count]     = buf[i];
-            clean[clean_count].id  = clean_count + 1;
+            clean[clean_count]    = buf[i];
+            clean[clean_count].id = clean_count + 1;
             clean_count++;
         }
     }
@@ -343,22 +327,12 @@ void cmd_purge(int enc_key)
 void cmd_change_password(struct VaultMeta *meta)
 {
     char current_input[MAX_FIELD_LEN];
-<<<<<<< HEAD
-=======
-    char computed[MAX_HASH_LEN];
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
 
     /* Verify current password */
     printf("Enter current password: ");
-    fgets(current_input, MAX_FIELD_LEN, stdin);
-    current_input[strcspn(current_input, "\n")] = '\0';
+    get_masked_input(current_input, MAX_FIELD_LEN);
 
-<<<<<<< HEAD
     if (!verify_password(current_input, meta)) {
-=======
-    hash_password(current_input, computed);
-    if (strcmp(computed, meta->password_hash) != 0) {
->>>>>>> 147ca3881da07e9e62d139f2406bd89a6c5cac84
         printf("Incorrect current password.\n");
         return;
     }
@@ -368,12 +342,10 @@ void cmd_change_password(struct VaultMeta *meta)
     char confirm_pwd[MAX_FIELD_LEN];
 
     printf("Enter new password: ");
-    fgets(new_pwd, MAX_FIELD_LEN, stdin);
-    new_pwd[strcspn(new_pwd, "\n")] = '\0';
+    get_masked_input(new_pwd, MAX_FIELD_LEN);
 
     printf("Confirm new password: ");
-    fgets(confirm_pwd, MAX_FIELD_LEN, stdin);
-    confirm_pwd[strcspn(confirm_pwd, "\n")] = '\0';
+    get_masked_input(confirm_pwd, MAX_FIELD_LEN);
 
     if (strcmp(new_pwd, confirm_pwd) != 0) {
         printf("Passwords do not match.\n");

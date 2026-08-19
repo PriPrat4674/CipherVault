@@ -5,13 +5,13 @@ void encrypt_string(char *str, int key) {
         return;
     }
     for (int i = 0; str[i] != '\0'; i++) {
-        char c = str[i];
+        unsigned char c = (unsigned char)str[i];
         if (c >= 'A' && c <= 'Z') {
             str[i] = (char)(((c - 'A' + key) % 26) + 'A');
         } else if (c >= 'a' && c <= 'z') {
             str[i] = (char)(((c - 'a' + key) % 26) + 'a');
         } else {
-            str[i] = (char)(c ^ XOR_KEY);
+            str[i] = (char)(c ^ 0x80);
         }
     }
 }
@@ -21,13 +21,13 @@ void decrypt_string(char *str, int key) {
         return;
     }
     for (int i = 0; str[i] != '\0'; i++) {
-        char c = str[i];
+        unsigned char c = (unsigned char)str[i];
         if (c >= 'A' && c <= 'Z') {
             str[i] = (char)(((c - 'A' - key + 26) % 26) + 'A');
         } else if (c >= 'a' && c <= 'z') {
             str[i] = (char)(((c - 'a' - key + 26) % 26) + 'a');
         } else {
-            str[i] = (char)(c ^ XOR_KEY);
+            str[i] = (char)(c ^ 0x80);
         }
     }
 }
